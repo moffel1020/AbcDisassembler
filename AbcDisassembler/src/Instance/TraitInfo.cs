@@ -9,7 +9,6 @@ public class TraitInfo
     public TraitAttributes Attributes { get; set; }
     public TraitType Kind { get; set; }
     public BaseTrait Trait { get; set; } = null!;
-    public uint? MetadataCount { get; set; } // u30
     public List<uint>? Metadata { get; set; } // u30 index into metadata array of abcfile
 
     public static TraitInfo Read(ByteReader reader)
@@ -31,9 +30,9 @@ public class TraitInfo
 
         if (info.Attributes.HasFlag(TraitAttributes.Metadata))
         {
-            info.MetadataCount = reader.ReadU30();
-            info.Metadata = [];
-            for (int i = 0; i < info.MetadataCount; i++)
+            int metadataCount = (int)reader.ReadU30();
+            info.Metadata = new(metadataCount);
+            for (int i = 0; i < metadataCount; i++)
                 info.Metadata.Add(reader.ReadU30());
         }
 

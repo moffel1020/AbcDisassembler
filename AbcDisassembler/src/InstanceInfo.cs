@@ -8,11 +8,9 @@ public class InstanceInfo
     public uint SuperName { get; set; } // u30 index into multiname, name of base class
     public InstanceFlags Flags { get; set; }
     public uint? ProtectedNs { get; set; } // u30 index into namespace array
-    public uint InterfaceCount { get; set; } // u30
-    public List<uint> Interfaces = []; // u30 index into multiname array
+    public List<uint> Interfaces = null!; // u30 index into multiname array
     public uint Init { get; set; } // u30 index into method array of abcfile, constructor
-    public uint TraitCount { get; set; } // u30
-    public List<TraitInfo> Traits { get; set; } = [];
+    public List<TraitInfo> Traits { get; set; } = null!;
 
     public static InstanceInfo Read(ByteReader reader)
     {
@@ -23,13 +21,15 @@ public class InstanceInfo
         if (info.Flags.HasFlag(InstanceFlags.ProtectedNs))
             info.ProtectedNs = reader.ReadU30();
 
-        info.InterfaceCount = reader.ReadU30();
-        for (int i = 0; i < info.InterfaceCount; i++)
+        int interfaceCount = (int)reader.ReadU30();
+        info.Interfaces = new(interfaceCount);
+        for (int i = 0; i < interfaceCount; i++)
             info.Interfaces.Add(reader.ReadU30());
         
         info.Init = reader.ReadU30();
-        info.TraitCount = reader.ReadU30();
-        for (int i = 0; i < info.TraitCount; i++)
+        int traitCount = (int)reader.ReadU30();
+        info.Traits = new(traitCount);
+        for (int i = 0; i < traitCount; i++)
             info.Traits.Add(TraitInfo.Read(reader));
 
         return info;

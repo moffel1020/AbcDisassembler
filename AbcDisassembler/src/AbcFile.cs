@@ -8,22 +8,12 @@ public class AbcFile()
     public uint MajorVersion { get; set; } // u16
 
     public CPoolInfo ConstantPool { get; set; } = null!;
-
-    public uint MethodCount { get; set; } // u30
-    public List<MethodInfo> Methods { get; set; } = [];
-
-    public uint MetadataCount { get; set; } // u30
-    public List<MetadataInfo> Metadata { get; set; } = [];
-
-    public uint ClassCount { get; set; } // u30
-    public List<InstanceInfo> Instances { get; set; } = [];
-    public List<ClassInfo> Classes { get; set;} = [];
-
-    public uint ScriptCount { get; set; } // u30
-    public List<ScriptInfo> Scripts { get; set; } = [];
-
-    public uint MethodBodyCount { get; set; } // u30
-    public List<MethodBodyInfo> MethodBodies { get; set; } = [];
+    public List<MethodInfo> Methods { get; set; } = null!;
+    public List<MetadataInfo> Metadata { get; set; } = null!;
+    public List<InstanceInfo> Instances { get; set; } = null!;
+    public List<ClassInfo> Classes { get; set;} = null!;
+    public List<ScriptInfo> Scripts { get; set; } = null!;
+    public List<MethodBodyInfo> MethodBodies { get; set; } = null!;
 
     public static AbcFile Read(byte[] bytes)
     {
@@ -35,23 +25,28 @@ public class AbcFile()
 
         abc.ConstantPool = CPoolInfo.Read(reader);
 
-        abc.MethodCount = reader.ReadU30();
-        for (int i = 0; i < abc.MethodCount; i++)
+        int methodCount = (int)reader.ReadU30();
+        abc.Methods = new(methodCount);
+        for (int i = 0; i < methodCount; i++)
             abc.Methods.Add(MethodInfo.Read(reader));
 
-        abc.MetadataCount = reader.ReadU30();
-        for (int i = 0; i < abc.MetadataCount; i++)
+        int metadataCount = (int)reader.ReadU30();
+        abc.Metadata = new(metadataCount);
+        for (int i = 0; i < metadataCount; i++)
             abc.Metadata.Add(MetadataInfo.Read(reader));
 
-        abc.ClassCount = reader.ReadU30();
-        for (int i = 0; i < abc.ClassCount; i++)
+        int classCount = (int)reader.ReadU30();
+        abc.Instances = new(classCount);
+        for (int i = 0; i < classCount; i++)
             abc.Instances.Add(InstanceInfo.Read(reader));
         
-        for (int i = 0; i < abc.ClassCount; i++)
+        abc.Classes = new(classCount);
+        for (int i = 0; i < classCount; i++)
             abc.Classes.Add(ClassInfo.Read(reader));
 
-        abc.ScriptCount = reader.ReadU30(); 
-        for (int i = 0; i < abc.ScriptCount; i++)
+        int scriptCount = (int)reader.ReadU30(); 
+        abc.Scripts = new(scriptCount);
+        for (int i = 0; i < scriptCount; i++)
             abc.Scripts.Add(ScriptInfo.Read(reader));
 
         // TODO: MethodBody
