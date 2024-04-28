@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 
 namespace AbcDisassembler;
 
@@ -7,7 +8,7 @@ public class CPoolInfo
     public List<int> Ints { get; set; } = null!; // s32
     public List<uint> Uints { get; set; } = null!; // u32
     public List<double> Doubles { get; set; } = null!; // d64
-    public List<StringInfo> Strings { get; set; } = null!; 
+    public List<string> Strings { get; set; } = null!; 
     public List<NamespaceInfo> Namespaces { get; set; } = null!; 
     public List<NamespaceSetInfo> NamespaceSets { get; set; } = null!; 
     public List<MultinameInfo> Multinames { get; set; } = null!; 
@@ -32,9 +33,9 @@ public class CPoolInfo
             pool.Doubles.Add(reader.ReadD64());
 
         int stringCount = (int)reader.ReadU30();
-        pool.Strings = new(stringCount) { new StringInfo() { Data = "" } };
+        pool.Strings = new(stringCount) { "" };
         for (int i = 0; i < stringCount - 1; i++)
-            pool.Strings.Add(StringInfo.Read(reader));
+            pool.Strings.Add(ReadString(reader));
 
         int namespaceCount = (int)reader.ReadU30();
         pool.Namespaces = new(namespaceCount) { new NamespaceInfo() };
@@ -52,5 +53,12 @@ public class CPoolInfo
             pool.Multinames.Add(MultinameInfo.Read(reader));
 
         return pool;
+    }
+
+    private static string ReadString(ByteReader reader)
+    {
+        uint length = reader.ReadU30();
+        byte[] bytes = reader.ReadBytes(length);
+        return Encoding.UTF8.GetString(bytes, 0, (int)length);
     }
 }
