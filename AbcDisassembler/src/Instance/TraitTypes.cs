@@ -2,7 +2,7 @@ namespace AbcDisassembler;
 
 public abstract class BaseTrait { }
 
-public class SlotTrait(): BaseTrait
+public class SlotTrait() : BaseTrait
 {
     public uint Id { get; set; } // u30
     public uint TypeName { get; set; } // u30 index into multiname array
@@ -23,7 +23,7 @@ public class SlotTrait(): BaseTrait
     }
 }
 
-public class ClassTrait(uint id, uint index ): BaseTrait
+public class ClassTrait(uint id, uint index ) : BaseTrait
 {
     public uint Id { get; set; } = id; // u30
     public uint Index { get; set; } = index; // u30 index into class array of abcfile

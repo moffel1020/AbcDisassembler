@@ -5,51 +5,27 @@ namespace AbcDisassembler;
 
 public class Instruction
 {
-    public byte OpCode { get; set; }
+    public byte OpCode { get; private set; }
     public string Name { get; private set; } = null!;
-    public ArgType[] ArgTypes { get; set; } = null!;
-    public List<object> Args = null!;
+    public List<Argument> Args { get; private set; }= null!;
 
     public static Instruction Read(ByteReader reader, CPoolInfo cPool)
     {
         Instruction ins = new();
         ins.OpCode = reader.ReadU8();
-        (ins.Name, ins.ArgTypes) = GetInfo(ins.OpCode);
-        ins.Args = new(ins.ArgTypes.Length);
-        foreach (ArgType t in ins.ArgTypes)
-            ins.Args.Add(ReadArg(t, reader, cPool));
+
+        (string, ArgType[]) info = GetInfo(ins.OpCode);
+        ins.Name = info.Item1;
+
+        ins.Args = new(info.Item2.Length);
+        foreach (ArgType t in info.Item2)
+        {
+            Argument arg = new Argument(t);
+            arg.ReadValue(reader, cPool);
+            ins.Args.Add(arg);
+        }
 
         return ins;
-    }
-
-    private static object ReadArg(ArgType t, ByteReader reader, CPoolInfo cPool) => t switch
-    {
-        ArgType.ByteLiteral or ArgType.UByteLiteral => reader.ReadU8(),
-        ArgType.IntLiteral => reader.ReadS32(),
-        ArgType.UintLiteral => reader.ReadU32(),
-        ArgType.Int => cPool.Ints[(int)reader.ReadU30()],
-        ArgType.Uint => cPool.Uints[(int)reader.ReadU30()],
-        ArgType.Double => cPool.Doubles[(int)reader.ReadU30()],
-        ArgType.String => cPool.Strings[(int)reader.ReadU30()],
-        ArgType.Namespace => cPool.Namespaces[(int)reader.ReadU30()],
-        ArgType.Multiname => cPool.Multinames[(int)reader.ReadU30()],
-        ArgType.Class or ArgType.Method => reader.ReadU30(),
-        
-        // TODO: convert byte offset to instruction offset
-        ArgType.JumpTarget => reader.ReadS24(),
-        ArgType.SwitchDefaultTarget => reader.ReadS24(),
-        ArgType.SwitchTargets => ReadSwitchTargets(reader),
-        _ => throw new InvalidOperationException($"Tried to read unknown argument type {t}")
-    };
-
-    private static List<int> ReadSwitchTargets(ByteReader reader)
-    {
-        int amount = (int)reader.ReadU30() + 1;
-        List<int> targets = new(amount);
-        for (int i = 0; i < amount; i++)
-            targets.Add(reader.ReadS24());
-
-        return targets;
     }
 
     public static (string, ArgType[]) GetInfo(byte opCode) => opCode switch

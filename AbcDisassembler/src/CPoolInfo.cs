@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,7 +12,7 @@ public class CPoolInfo
     public List<string> Strings { get; set; } = null!; 
     public List<NamespaceInfo> Namespaces { get; set; } = null!; 
     public List<NamespaceSetInfo> NamespaceSets { get; set; } = null!; 
-    public List<MultinameInfo> Multinames { get; set; } = null!; 
+    public List<IBaseMultiname> Multinames { get; set; } = null!; 
 
     public static CPoolInfo Read(ByteReader reader)
     {
@@ -48,9 +49,9 @@ public class CPoolInfo
             pool.NamespaceSets.Add(NamespaceSetInfo.Read(reader));
 
         int multinameCount = (int)reader.ReadU30();
-        pool.Multinames = new(multinameCount) { new MultinameInfo() };
+        pool.Multinames = new(multinameCount) { new QName(0, 0) };
         for (int i = 0; i < multinameCount - 1; i++)
-            pool.Multinames.Add(MultinameInfo.Read(reader));
+            pool.Multinames.Add(ReadMultiname(reader));
 
         return pool;
     }
@@ -60,5 +61,22 @@ public class CPoolInfo
         uint length = reader.ReadU30();
         byte[] bytes = reader.ReadBytes(length);
         return Encoding.UTF8.GetString(bytes, 0, (int)length);
+    }
+
+    private static IBaseMultiname ReadMultiname(ByteReader reader)
+    {
+        MultinameKind kind = (MultinameKind)reader.ReadU8();
+        IBaseMultiname mn = kind switch
+        {
+            MultinameKind.QName or MultinameKind.QNameA => new QName(reader.ReadU30(), reader.ReadU30()),
+            MultinameKind.RTQName or MultinameKind.RTQNameA => new RTQName(reader.ReadU30()),
+            MultinameKind.RTQNameL or MultinameKind.RTQNameLA => new RTQNameL(),
+            MultinameKind.Multiname or MultinameKind.MultinameA => new Multiname(reader.ReadU30(), reader.ReadU30()),
+            MultinameKind.MultinameL or MultinameKind.MultinameLA => new MultinameL(reader.ReadU30()),
+            MultinameKind.TypeName => TypeName.Read(reader),
+            _ => throw new InvalidOperationException($"Tried to read unknown MultinameKind {kind}")
+        };
+
+        return mn;
     }
 }
