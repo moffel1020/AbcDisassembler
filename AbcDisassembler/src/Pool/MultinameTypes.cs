@@ -28,7 +28,7 @@ public class Multiname(uint name, uint nsSet) : BaseMultiname
 
 public class MultinameL(uint nsSet) : BaseMultiname
 {
-    public uint NamespaceSet { get; set; } = nsSet; // u30 inndex into namespace_sets
+    public uint NamespaceSet { get; set; } = nsSet; // u30 index into namespace_sets
 }
 
 public class TypeName() : BaseMultiname

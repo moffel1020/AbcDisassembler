@@ -1,8 +1,6 @@
-using System.Data.Common;
-
 namespace AbcDisassembler;
 
-public class BaseTrait { }
+public abstract class BaseTrait { }
 
 public class SlotTrait(): BaseTrait
 {

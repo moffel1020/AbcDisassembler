@@ -49,8 +49,11 @@ public class AbcFile()
         for (int i = 0; i < scriptCount; i++)
             abc.Scripts.Add(ScriptInfo.Read(reader));
 
-        // TODO: MethodBody
-        
+        int methodBodyCount = (int)reader.ReadU30();
+        abc.MethodBodies = new(methodBodyCount);
+        for (int i = 0; i < methodBodyCount; i++)
+            abc.MethodBodies.Add(MethodBodyInfo.Read(reader, abc.ConstantPool));
+
         return abc;
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 
 namespace AbcDisassembler;
 
@@ -7,6 +6,8 @@ public class ByteReader(byte[] bytes)
 {
     private readonly byte[] _buffer = bytes;
     private int _position = 0;
+
+    public int Position => _position;
 
     public byte ReadU8()
     {
@@ -20,11 +21,7 @@ public class ByteReader(byte[] bytes)
 
     public int ReadS24() => ReadU8() | ReadU8() << 8 | (int)(ReadU8() << 24) >> 8;
 
-    public long ReadS32()
-    {
-        long val = BitConverter.ToInt64(BitConverter.GetBytes(ReadU32()));
-        return val;
-    }
+    public long ReadS32() => BitConverter.ToInt64(BitConverter.GetBytes(ReadU32()));
 
     public uint ReadU30() => (uint)(ReadU32() & 0x3FFFFFFF);
 
