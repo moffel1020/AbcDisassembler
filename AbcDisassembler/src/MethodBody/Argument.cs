@@ -8,7 +8,7 @@ public class Argument(ArgType type)
     public object Value { get; set; } = null!;
     public ArgType Type { get; } = type;
 
-    public object ReadValue(ByteReader reader, CPoolInfo cPool) => Type switch
+    public object ReadValue(ByteReader reader, CPoolInfo cPool) => Value = Type switch
     {
         ArgType.ByteLiteral or ArgType.UByteLiteral => reader.ReadU8(),
         ArgType.IntLiteral => reader.ReadS32(),
