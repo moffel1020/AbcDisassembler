@@ -3,29 +3,35 @@ using System.Collections.Generic;
 
 namespace AbcDisassembler;
 
-public class Argument(ArgType type)
+public class Argument
 {
-    public object Value { get; set; } = null!;
-    public ArgType Type { get; } = type;
+    public required object Value { get; set; }
+    public ArgType Type { get; init; }
 
-    public object ReadValue(ByteReader reader, CPoolInfo cPool) => Value = Type switch
+    internal static Argument Read(ByteReader reader, ArgType type, CPoolInfo cpool) => new()
+    {
+        Value = ReadValue(reader, type, cpool),
+        Type = type
+    };
+
+    private static object ReadValue(ByteReader reader, ArgType type, CPoolInfo cpool) => type switch
     {
         ArgType.ByteLiteral or ArgType.UByteLiteral => reader.ReadU8(),
         ArgType.IntLiteral => reader.ReadS32(),
         ArgType.UintLiteral => reader.ReadU32(),
-        ArgType.Int => cPool.Ints[(int)reader.ReadU30()],
-        ArgType.Uint => cPool.Uints[(int)reader.ReadU30()],
-        ArgType.Double => cPool.Doubles[(int)reader.ReadU30()],
-        ArgType.String => cPool.Strings[(int)reader.ReadU30()],
-        ArgType.Namespace => cPool.Namespaces[(int)reader.ReadU30()],
-        ArgType.Multiname => cPool.Multinames[(int)reader.ReadU30()],
+        ArgType.Int => cpool.Ints[(int)reader.ReadU30()],
+        ArgType.Uint => cpool.Uints[(int)reader.ReadU30()],
+        ArgType.Double => cpool.Doubles[(int)reader.ReadU30()],
+        ArgType.String => cpool.Strings[(int)reader.ReadU30()],
+        ArgType.Namespace => cpool.Namespaces[(int)reader.ReadU30()],
+        ArgType.Multiname => cpool.Multinames[(int)reader.ReadU30()],
         ArgType.Class or ArgType.Method => reader.ReadU30(),
         
         // TODO: convert byte offset to instruction offset
         ArgType.JumpTarget => reader.ReadS24(),
         ArgType.SwitchDefaultTarget => reader.ReadS24(),
         ArgType.SwitchTargets => ReadSwitchTargets(reader),
-        _ => throw new InvalidOperationException($"Tried to read unknown argument type {Type}")
+        _ => throw new InvalidOperationException($"Tried to read unknown argument type {type}")
     };
 
     private static List<int> ReadSwitchTargets(ByteReader reader)

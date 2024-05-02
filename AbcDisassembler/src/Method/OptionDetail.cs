@@ -2,8 +2,8 @@ namespace AbcDisassembler;
 
 public class OptionDetail
 {
-    public uint Value { get; set; }
-    public ConstantKind Kind { get; set; }
+    public required uint Value { get; set; }
+    public required ConstantKind Kind { get; set; }
 
     public static OptionDetail Read(ByteReader reader) => new()
     {

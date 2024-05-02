@@ -4,36 +4,44 @@ namespace AbcDisassembler;
 
 public class MethodInfo
 {
-    public uint ReturnType { get; set; } // u30 index into ParamType array
-    public List<uint> ParamTypes { get; set; } = null!; // u30 indices to multiname constant array 
-    public uint Name { get; set; } // u30 index into string array
-    public MethodFlags Flags { get; set; } 
+    public required uint ReturnType { get; set; } // u30 index into ParamType array
+    public required List<uint> ParamTypes { get; set; } // u30 indices to multiname constant array 
+    public required uint Name { get; set; } // u30 index into string array
+    public required MethodFlags Flags { get; set; } 
     public OptionInfo? Options { get; set; }
     public List<uint>? ParamNames { get; set; } // u30 index into cpool string array
 
     public static MethodInfo Read(ByteReader reader)
     {
-        MethodInfo info = new();
-
         int paramCount = (int)reader.ReadU30();
-        info.ReturnType = reader.ReadU30();
-        info.ParamTypes = new(paramCount);
+        uint returnType = reader.ReadU30();
+        List<uint> paramTypes = new(paramCount);
         for (int i = 0; i < paramCount; i++)
-            info.ParamTypes.Add(reader.ReadU30());
+            paramTypes.Add(reader.ReadU30());
 
-        info.Name = reader.ReadU30();
-        info.Flags = (MethodFlags)reader.ReadU8();
+        uint name = reader.ReadU30();
+        MethodFlags flags = (MethodFlags)reader.ReadU8();
 
-        if (info.Flags.HasFlag(MethodFlags.HasOptional))
-            info.Options = OptionInfo.Read(reader);
+        OptionInfo? options = null;
+        if (flags.HasFlag(MethodFlags.HasOptional))
+            options = OptionInfo.Read(reader);
 
-        if (info.Flags.HasFlag(MethodFlags.HasParamNames))
+        List<uint>? paramNames = null;
+        if (flags.HasFlag(MethodFlags.HasParamNames))
         {
-            info.ParamNames = [];
-            for (int i = 0; i < info.ParamTypes.Count; i++)
-                info.ParamNames.Add(reader.ReadU30());
+            paramNames = new(paramTypes.Count);
+            for (int i = 0; i < paramTypes.Count; i++)
+                paramNames.Add(reader.ReadU30());
         }
 
-        return info;
+        return new()
+        {
+            ReturnType = returnType,
+            ParamTypes = paramTypes,
+            Name = name,
+            Flags = flags,
+            Options = options,
+            ParamNames = paramNames
+        };
     }
 }

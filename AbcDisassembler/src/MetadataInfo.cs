@@ -4,23 +4,26 @@ namespace AbcDisassembler;
 
 public class MetadataInfo
 {
-    public uint Name { get; set; } // u30 index into string constants
-    public List<ItemInfo> Items = null!;
+    public required uint Name { get; set; } // u30 index into string constants
+    public required List<ItemInfo> Items;
 
-    public static MetadataInfo Read(ByteReader reader)
+    internal static MetadataInfo Read(ByteReader reader)
     {
-        MetadataInfo info = new();
-        info.Name = reader.ReadU30();
+        uint name = reader.ReadU30();
         int itemCount = (int)reader.ReadU30();
-        info.Items = new(itemCount);
+        List<ItemInfo> items = new(itemCount);
         for (int i = 0; i < itemCount; i++)
-            info.Items.Add(new ItemInfo());
+            items.Add(new ItemInfo());
 
-        foreach (ItemInfo i in info.Items)
+        foreach (ItemInfo i in items)
             i.Key = reader.ReadU30();  
-        foreach (ItemInfo i in info.Items)
+        foreach (ItemInfo i in items)
             i.Value = reader.ReadU30();
 
-        return info;
+        return new()
+        {
+            Name = name,
+            Items = items
+        };
     }
 }

@@ -4,34 +4,44 @@ namespace AbcDisassembler;
 
 public class InstanceInfo
 {
-    public uint Name { get; set; } // u30 index into multinames, name of class
-    public uint SuperName { get; set; } // u30 index into multiname, name of base class
-    public InstanceFlags Flags { get; set; }
-    public uint? ProtectedNs { get; set; } // u30 index into namespace array
-    public List<uint> Interfaces = null!; // u30 index into multiname array
-    public uint Init { get; set; } // u30 index into method array of abcfile, constructor
-    public List<TraitInfo> Traits { get; set; } = null!;
+    public required uint Name { get; set; } // u30 index into multinames, name of class
+    public required uint SuperName { get; set; } // u30 index into multiname, name of base class
+    public required InstanceFlags Flags { get; set; }
+    public required uint? ProtectedNs { get; set; } // u30 index into namespace array
+    public required List<uint> Interfaces; // u30 index into multiname array
+    public required uint Init { get; set; } // u30 index into method array of abcfile, constructor
+    public required List<TraitInfo> Traits { get; set; } = null!;
 
-    public static InstanceInfo Read(ByteReader reader)
+    internal static InstanceInfo Read(ByteReader reader)
     {
-        InstanceInfo info = new();
-        info.Name = reader.ReadU30();
-        info.SuperName = reader.ReadU30();
-        info.Flags = (InstanceFlags)reader.ReadU8();
-        if (info.Flags.HasFlag(InstanceFlags.ProtectedNs))
-            info.ProtectedNs = reader.ReadU30();
+        uint name = reader.ReadU30();
+        uint superName = reader.ReadU30();
+        InstanceFlags flags = (InstanceFlags)reader.ReadU8();
+
+        uint? protectedNs = null;
+        if (flags.HasFlag(InstanceFlags.ProtectedNs))
+            protectedNs = reader.ReadU30();
 
         int interfaceCount = (int)reader.ReadU30();
-        info.Interfaces = new(interfaceCount);
+        List<uint> interfaces = new(interfaceCount);
         for (int i = 0; i < interfaceCount; i++)
-            info.Interfaces.Add(reader.ReadU30());
+            interfaces.Add(reader.ReadU30());
         
-        info.Init = reader.ReadU30();
+        uint init = reader.ReadU30();
         int traitCount = (int)reader.ReadU30();
-        info.Traits = new(traitCount);
+        List<TraitInfo> traits = new(traitCount);
         for (int i = 0; i < traitCount; i++)
-            info.Traits.Add(TraitInfo.Read(reader));
+            traits.Add(TraitInfo.Read(reader));
 
-        return info;
+        return new()
+        {
+            Name = name,
+            SuperName = superName,
+            Flags = flags,
+            ProtectedNs = protectedNs,
+            Interfaces = interfaces,
+            Init = init,
+            Traits = traits
+        };
     }
 }

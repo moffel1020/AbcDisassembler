@@ -6,54 +6,61 @@ namespace AbcDisassembler;
 
 public class CPoolInfo
 {
-    public List<int> Ints { get; set; } = null!; // s32
-    public List<uint> Uints { get; set; } = null!; // u32
-    public List<double> Doubles { get; set; } = null!; // d64
-    public List<string> Strings { get; set; } = null!; 
-    public List<NamespaceInfo> Namespaces { get; set; } = null!; 
-    public List<NamespaceSetInfo> NamespaceSets { get; set; } = null!; 
-    public List<IBaseMultiname> Multinames { get; set; } = null!; 
+    public required List<int> Ints { get; set; }
+    public required List<uint> Uints { get; set; }
+    public required List<double> Doubles { get; set; }
+    public required List<string> Strings { get; set; }
+    public required List<NamespaceInfo> Namespaces { get; set; }
+    public required List<NamespaceSetInfo> NamespaceSets { get; set; }
+    public required List<IBaseMultiname> Multinames { get; set; }
 
-    public static CPoolInfo Read(ByteReader reader)
+    internal static CPoolInfo Read(ByteReader reader)
     {
-        CPoolInfo pool = new();
-
         int intCount = (int)reader.ReadU30();
-        pool.Ints = new(intCount) { 0 };
+        List<int> ints = new(intCount) { 0 };
         for (int i = 0; i < intCount - 1; i++)
-            pool.Ints.Add((int)reader.ReadS32());
+            ints.Add((int)reader.ReadS32());
 
         int uintCount = (int)reader.ReadU30();
-        pool.Uints = new(uintCount) { 0 };
+        List<uint> uints = new(uintCount) { 0 };
         for (int i  = 0; i < uintCount - 1; i++)
-            pool.Uints.Add((uint)reader.ReadU32());
+            uints.Add((uint)reader.ReadU32());
 
         int doubleCount = (int)reader.ReadU30();
-        pool.Doubles = new(doubleCount) { double.NaN };
+        List<double> doubles = new(doubleCount) { double.NaN };
         for (int i = 0; i < doubleCount - 1; i++)
-            pool.Doubles.Add(reader.ReadD64());
+            doubles.Add(reader.ReadD64());
 
         int stringCount = (int)reader.ReadU30();
-        pool.Strings = new(stringCount) { "" };
+        List<string> strings = new(stringCount) { "" };
         for (int i = 0; i < stringCount - 1; i++)
-            pool.Strings.Add(ReadString(reader));
+            strings.Add(ReadString(reader));
 
         int namespaceCount = (int)reader.ReadU30();
-        pool.Namespaces = new(namespaceCount) { new NamespaceInfo() };
+        List<NamespaceInfo> namespaces = new(namespaceCount) { new NamespaceInfo() { Name = 0, Kind = NamespaceKind.Namespace } };
         for (int i = 0; i < namespaceCount - 1; i++)
-            pool.Namespaces.Add(NamespaceInfo.Read(reader));
+            namespaces.Add(NamespaceInfo.Read(reader));
 
         int namespaceSetCount = (int)reader.ReadU30();
-        pool.NamespaceSets = new(namespaceSetCount) { new NamespaceSetInfo() };
+        List<NamespaceSetInfo> namespaceSets = new(namespaceSetCount) { new NamespaceSetInfo() { Namespaces = [] } };
         for (int i = 0; i < namespaceSetCount - 1; i++)
-            pool.NamespaceSets.Add(NamespaceSetInfo.Read(reader));
+            namespaceSets.Add(NamespaceSetInfo.Read(reader));
 
         int multinameCount = (int)reader.ReadU30();
-        pool.Multinames = new(multinameCount) { new QName(0, 0) };
+        List<IBaseMultiname> multinames = new(multinameCount) { new QName(0, 0) };
         for (int i = 0; i < multinameCount - 1; i++)
-            pool.Multinames.Add(ReadMultiname(reader));
+            multinames.Add(ReadMultiname(reader));
 
-        return pool;
+        return new()
+        {
+            Ints = ints,
+            Uints = uints,
+            Doubles = doubles,
+            Strings = strings,
+            Namespaces = namespaces,
+            NamespaceSets = namespaceSets,
+            Multinames = multinames
+        };
     }
 
     private static string ReadString(ByteReader reader)

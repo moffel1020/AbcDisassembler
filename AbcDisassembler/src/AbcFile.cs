@@ -4,56 +4,66 @@ namespace AbcDisassembler;
 
 public class AbcFile()
 {
-    public uint MinorVersion { get; set; } // u16
-    public uint MajorVersion { get; set; } // u16
+    public ushort MinorVersion { get; set; }
+    public ushort MajorVersion { get; set; }
 
-    public CPoolInfo ConstantPool { get; set; } = null!;
-    public List<MethodInfo> Methods { get; set; } = null!;
-    public List<MetadataInfo> Metadata { get; set; } = null!;
-    public List<InstanceInfo> Instances { get; set; } = null!;
-    public List<ClassInfo> Classes { get; set;} = null!;
-    public List<ScriptInfo> Scripts { get; set; } = null!;
-    public List<MethodBodyInfo> MethodBodies { get; set; } = null!;
+    public required CPoolInfo ConstantPool { get; set; }
+    public required List<MethodInfo> Methods { get; set; }
+    public required List<MetadataInfo> Metadata { get; set; }
+    public required List<InstanceInfo> Instances { get; set; }
+    public required List<ClassInfo> Classes { get; set;}
+    public required List<ScriptInfo> Scripts { get; set; }
+    public required List<MethodBodyInfo> MethodBodies { get; set; }
 
     public static AbcFile Read(byte[] bytes)
     {
         ByteReader reader = new(bytes);
-        AbcFile abc = new();
 
-        abc.MinorVersion = reader.ReadU16();
-        abc.MajorVersion = reader.ReadU16();
+        ushort minorVersion = reader.ReadU16();
+        ushort majorVersion = reader.ReadU16();
 
-        abc.ConstantPool = CPoolInfo.Read(reader);
+        CPoolInfo cpool = CPoolInfo.Read(reader);
 
         int methodCount = (int)reader.ReadU30();
-        abc.Methods = new(methodCount);
+        List<MethodInfo> methods = new(methodCount);
         for (int i = 0; i < methodCount; i++)
-            abc.Methods.Add(MethodInfo.Read(reader));
+            methods.Add(MethodInfo.Read(reader));
 
         int metadataCount = (int)reader.ReadU30();
-        abc.Metadata = new(metadataCount);
+        List<MetadataInfo> metadata = new(metadataCount);
         for (int i = 0; i < metadataCount; i++)
-            abc.Metadata.Add(MetadataInfo.Read(reader));
+            metadata.Add(MetadataInfo.Read(reader));
 
         int classCount = (int)reader.ReadU30();
-        abc.Instances = new(classCount);
+        List<InstanceInfo> instances = new(classCount);
         for (int i = 0; i < classCount; i++)
-            abc.Instances.Add(InstanceInfo.Read(reader));
+            instances.Add(InstanceInfo.Read(reader));
         
-        abc.Classes = new(classCount);
+        List<ClassInfo> classes = new(classCount);
         for (int i = 0; i < classCount; i++)
-            abc.Classes.Add(ClassInfo.Read(reader));
+            classes.Add(ClassInfo.Read(reader));
 
         int scriptCount = (int)reader.ReadU30(); 
-        abc.Scripts = new(scriptCount);
+        List<ScriptInfo> scripts = new(scriptCount);
         for (int i = 0; i < scriptCount; i++)
-            abc.Scripts.Add(ScriptInfo.Read(reader));
+            scripts.Add(ScriptInfo.Read(reader));
 
         int methodBodyCount = (int)reader.ReadU30();
-        abc.MethodBodies = new(methodBodyCount);
+        List<MethodBodyInfo> methodBodies = new(methodBodyCount);
         for (int i = 0; i < methodBodyCount; i++)
-            abc.MethodBodies.Add(MethodBodyInfo.Read(reader, abc.ConstantPool));
+            methodBodies.Add(MethodBodyInfo.Read(reader, cpool));
 
-        return abc;
+        return new()
+        {
+            MinorVersion = minorVersion,
+            MajorVersion = majorVersion,
+            ConstantPool = cpool,
+            Methods = methods,
+            Metadata = metadata,
+            Instances = instances,
+            Classes = classes,
+            Scripts = scripts,
+            MethodBodies = methodBodies
+        };
     }
 }

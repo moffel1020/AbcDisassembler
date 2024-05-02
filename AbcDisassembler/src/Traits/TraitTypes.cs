@@ -9,17 +9,20 @@ public class SlotTrait() : BaseTrait
     public uint VIndex { get; set; } // u30
     public ConstantKind? VKind { get; set; }
 
-    public static SlotTrait Read(ByteReader reader)
+    internal static SlotTrait Read(ByteReader reader)
     {
-        SlotTrait trait = new()
-        {
-            Id = reader.ReadU30(),
-            TypeName = reader.ReadU30(),
-            VIndex = reader.ReadU30(),
-        };
-        trait.VKind = trait.VIndex > 0 ? (ConstantKind)reader.ReadU8() : null;
+        uint id = reader.ReadU30();
+        uint typeName = reader.ReadU30();
+        uint vIndex = reader.ReadU30();
+        ConstantKind? vKind = vIndex > 0 ? (ConstantKind)reader.ReadU8() : null;
 
-        return trait;
+        return new()
+        {
+            Id = id,
+            TypeName = typeName,
+            VIndex = vIndex,
+            VKind = vKind
+        };
     }
 }
 

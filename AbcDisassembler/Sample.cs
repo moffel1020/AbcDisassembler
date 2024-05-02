@@ -5,7 +5,7 @@ using SwfLib.Tags.ActionsTags;
 
 namespace AbcDisassembler;
 
-public class Sample
+internal class Sample
 {
     public static AbcFile? ReadOneAbcFile(string path)
     {

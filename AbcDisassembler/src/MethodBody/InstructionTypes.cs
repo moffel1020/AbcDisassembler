@@ -5,27 +5,27 @@ namespace AbcDisassembler;
 
 public class Instruction
 {
-    public byte OpCode { get; private set; }
-    public string Name { get; private set; } = null!;
-    public List<Argument> Args { get; private set; }= null!;
+    public required byte OpCode { get; set; }
+    public required string Name { get; set; }
+    public required List<Argument> Args { get; set; }
 
-    public static Instruction Read(ByteReader reader, CPoolInfo cPool)
+    internal static Instruction Read(ByteReader reader, CPoolInfo cpool)
     {
-        Instruction ins = new();
-        ins.OpCode = reader.ReadU8();
+        byte opCode = reader.ReadU8();
 
-        (string, ArgType[]) info = GetInfo(ins.OpCode);
-        ins.Name = info.Item1;
+        (string, ArgType[]) info = GetInfo(opCode);
+        string name = info.Item1;
 
-        ins.Args = new(info.Item2.Length);
+        List<Argument> args = new(info.Item2.Length);
         foreach (ArgType t in info.Item2)
-        {
-            Argument arg = new Argument(t);
-            arg.ReadValue(reader, cPool);
-            ins.Args.Add(arg);
-        }
+            args.Add(Argument.Read(reader, t, cpool));
 
-        return ins;
+        return new()
+        {
+            OpCode = opCode,
+            Name = name,
+            Args = args
+        };
     }
 
     public static (string, ArgType[]) GetInfo(byte opCode) => opCode switch
