@@ -23,7 +23,7 @@ public class CPoolInfo
 
         int uintCount = (int)reader.ReadU30();
         List<uint> uints = new(uintCount) { 0 };
-        for (int i  = 0; i < uintCount - 1; i++)
+        for (int i = 0; i < uintCount - 1; i++)
             uints.Add((uint)reader.ReadU32());
 
         int doubleCount = (int)reader.ReadU30();

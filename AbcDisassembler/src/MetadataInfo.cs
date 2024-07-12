@@ -16,7 +16,7 @@ public class MetadataInfo
             items.Add(new ItemInfo());
 
         foreach (ItemInfo i in items)
-            i.Key = reader.ReadU30();  
+            i.Key = reader.ReadU30();
         foreach (ItemInfo i in items)
             i.Value = reader.ReadU30();
 

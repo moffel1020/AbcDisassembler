@@ -11,7 +11,7 @@ public class AbcFile()
     public required List<MethodInfo> Methods { get; set; }
     public required List<MetadataInfo> Metadata { get; set; }
     public required List<InstanceInfo> Instances { get; set; }
-    public required List<ClassInfo> Classes { get; set;}
+    public required List<ClassInfo> Classes { get; set; }
     public required List<ScriptInfo> Scripts { get; set; }
     public required List<MethodBodyInfo> MethodBodies { get; set; }
 
@@ -38,12 +38,12 @@ public class AbcFile()
         List<InstanceInfo> instances = new(classCount);
         for (int i = 0; i < classCount; i++)
             instances.Add(InstanceInfo.Read(reader));
-        
+
         List<ClassInfo> classes = new(classCount);
         for (int i = 0; i < classCount; i++)
             classes.Add(ClassInfo.Read(reader));
 
-        int scriptCount = (int)reader.ReadU30(); 
+        int scriptCount = (int)reader.ReadU30();
         List<ScriptInfo> scripts = new(scriptCount);
         for (int i = 0; i < scriptCount; i++)
             scripts.Add(ScriptInfo.Read(reader));

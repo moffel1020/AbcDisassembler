@@ -13,7 +13,7 @@ public class ByteReader(byte[] bytes)
     {
         if (_position >= _buffer.Length)
             throw new IndexOutOfRangeException("Reached end of byte array");
-        
+
         return _buffer[_position++];
     }
 
@@ -48,11 +48,11 @@ public class ByteReader(byte[] bytes)
 
     public byte[] ReadBytes(uint count)
     {
-        if (_position + count > _buffer.Length) 
+        if (_position + count > _buffer.Length)
             throw new IndexOutOfRangeException($"Buffer will reach end by reading {count} bytes");
 
         byte[] result = new byte[count];
-        for (int i = 0; i < count; i++) 
+        for (int i = 0; i < count; i++)
             result[i] = ReadU8();
 
         return result;

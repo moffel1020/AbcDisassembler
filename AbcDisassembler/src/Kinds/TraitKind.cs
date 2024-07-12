@@ -8,7 +8,7 @@ public enum TraitType
     Setter = 3,
     Class = 4,
     Function = 5,
-    Const = 6    
+    Const = 6
 }
 
 public enum TraitAttributes

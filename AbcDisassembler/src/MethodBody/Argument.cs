@@ -26,7 +26,7 @@ public class Argument
         ArgType.Namespace => cpool.Namespaces[(int)reader.ReadU30()],
         ArgType.Multiname => cpool.Multinames[(int)reader.ReadU30()],
         ArgType.Class or ArgType.Method => reader.ReadU30(),
-        
+
         // TODO: convert byte offset to instruction offset
         ArgType.JumpTarget => reader.ReadS24(),
         ArgType.SwitchDefaultTarget => reader.ReadS24(),

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace AbcDisassembler;
 
-public class  NamespaceSetInfo
+public class NamespaceSetInfo
 {
     public required List<uint> Namespaces { get; set; } // indexes into constant pool namespace array
 

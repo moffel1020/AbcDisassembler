@@ -43,7 +43,7 @@ public class MultinameL(uint nsSet) : IBaseMultiname
     public MultinameKind Kind => MultinameKind.MultinameL;
 }
 
-public class TypeName() : INamedMultiname 
+public class TypeName() : INamedMultiname
 {
     public required uint Name { get; set; }
     public required List<uint> Params { get; set; }

@@ -26,7 +26,7 @@ public class InstanceInfo
         List<uint> interfaces = new(interfaceCount);
         for (int i = 0; i < interfaceCount; i++)
             interfaces.Add(reader.ReadU30());
-        
+
         uint init = reader.ReadU30();
         int traitCount = (int)reader.ReadU30();
         List<TraitInfo> traits = new(traitCount);

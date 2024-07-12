@@ -14,7 +14,7 @@ public class ScriptInfo
         List<TraitInfo> traits = new(traitCount);
         for (int i = 0; i < traitCount; i++)
             traits.Add(TraitInfo.Read(reader));
-        
+
         return new()
         {
             Init = init,

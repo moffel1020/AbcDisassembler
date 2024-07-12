@@ -7,7 +7,7 @@ public class MethodInfo
     public required uint ReturnType { get; set; } // u30 index into ParamType array
     public required List<uint> ParamTypes { get; set; } // u30 indices to multiname constant array 
     public required uint Name { get; set; } // u30 index into string array
-    public required MethodFlags Flags { get; set; } 
+    public required MethodFlags Flags { get; set; }
     public OptionInfo? Options { get; set; }
     public List<uint>? ParamNames { get; set; } // u30 index into cpool string array
 

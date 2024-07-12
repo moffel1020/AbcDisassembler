@@ -26,7 +26,7 @@ public class SlotTrait() : BaseTrait
     }
 }
 
-public class ClassTrait(uint id, uint index ) : BaseTrait
+public class ClassTrait(uint id, uint index) : BaseTrait
 {
     public uint Id { get; set; } = id; // u30
     public uint Index { get; set; } = index; // u30 index into class array of abcfile

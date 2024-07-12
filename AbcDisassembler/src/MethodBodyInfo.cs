@@ -22,7 +22,7 @@ public class MethodBodyInfo
         uint method = reader.ReadU30();
         uint maxStack = reader.ReadU30();
         uint localCount = reader.ReadU30();
-        uint initScopeDepth = reader.ReadU30();        
+        uint initScopeDepth = reader.ReadU30();
         uint maxScopeDepth = reader.ReadU30();
 
         uint codeLength = reader.ReadU30();
@@ -30,8 +30,8 @@ public class MethodBodyInfo
         List<Instruction> code = [];
         while (reader.Position < endPos)
             code.Add(Instruction.Read(reader, cPool));
-        
-        if (reader.Position > endPos) 
+
+        if (reader.Position > endPos)
             throw new IndexOutOfRangeException("ByteReader read past end position while reading instructions");
 
         int exceptionCount = (int)reader.ReadU30();
