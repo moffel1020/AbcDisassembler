@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 
 namespace AbcDisassembler;
 
@@ -12,23 +13,23 @@ public class InstanceInfo
     public required uint Init { get; set; } // u30 index into method array of abcfile, constructor
     public required List<TraitInfo> Traits { get; set; } = null!;
 
-    internal static InstanceInfo Read(ByteReader reader)
+    internal static InstanceInfo Read(BinaryReader reader)
     {
-        uint name = reader.ReadU30();
-        uint superName = reader.ReadU30();
-        InstanceFlags flags = (InstanceFlags)reader.ReadU8();
+        uint name = reader.ReadAbcUInt30();
+        uint superName = reader.ReadAbcUInt30();
+        InstanceFlags flags = (InstanceFlags)reader.ReadByte();
 
         uint? protectedNs = null;
         if (flags.HasFlag(InstanceFlags.ProtectedNs))
-            protectedNs = reader.ReadU30();
+            protectedNs = reader.ReadAbcUInt30();
 
-        int interfaceCount = (int)reader.ReadU30();
+        int interfaceCount = (int)reader.ReadAbcUInt30();
         List<uint> interfaces = new(interfaceCount);
         for (int i = 0; i < interfaceCount; i++)
-            interfaces.Add(reader.ReadU30());
+            interfaces.Add(reader.ReadAbcUInt30());
 
-        uint init = reader.ReadU30();
-        int traitCount = (int)reader.ReadU30();
+        uint init = reader.ReadAbcUInt30();
+        int traitCount = (int)reader.ReadAbcUInt30();
         List<TraitInfo> traits = new(traitCount);
         for (int i = 0; i < traitCount; i++)
             traits.Add(TraitInfo.Read(reader));

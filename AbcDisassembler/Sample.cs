@@ -10,7 +10,7 @@ internal class Sample
     public static AbcFile? ReadOneAbcFile(string path)
     {
         SwfFile swf;
-        using(FileStream file = new(path, FileMode.Open, FileAccess.Read))
+        using (FileStream file = new(path, FileMode.Open, FileAccess.Read))
         {
             swf = SwfFile.ReadFrom(file);
         }
@@ -18,7 +18,7 @@ internal class Sample
         foreach (SwfTagBase tag in swf.Tags)
         {
             if (tag is DoABCDefineTag doAbc)
-                return AbcFile.Read(doAbc.ABCData);
+                return AbcFile.Read(new MemoryStream(doAbc.ABCData));
         }
 
         return null;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace AbcDisassembler;
 
@@ -9,9 +10,9 @@ public class Instruction
     public required string Name { get; set; }
     public required List<Argument> Args { get; set; }
 
-    internal static Instruction Read(ByteReader reader, CPoolInfo cpool)
+    internal static Instruction Read(BinaryReader reader, CPoolInfo cpool)
     {
-        byte opCode = reader.ReadU8();
+        byte opCode = reader.ReadByte();
 
         (string, ArgType[]) info = GetInfo(opCode);
         string name = info.Item1;

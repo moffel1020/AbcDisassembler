@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace AbcDisassembler;
 
 public abstract class BaseTrait { }
@@ -9,12 +11,12 @@ public class SlotTrait() : BaseTrait
     public uint VIndex { get; set; } // u30
     public ConstantKind? VKind { get; set; }
 
-    internal static SlotTrait Read(ByteReader reader)
+    internal static SlotTrait Read(BinaryReader reader)
     {
-        uint id = reader.ReadU30();
-        uint typeName = reader.ReadU30();
-        uint vIndex = reader.ReadU30();
-        ConstantKind? vKind = vIndex > 0 ? (ConstantKind)reader.ReadU8() : null;
+        uint id = reader.ReadAbcUInt30();
+        uint typeName = reader.ReadAbcUInt30();
+        uint vIndex = reader.ReadAbcUInt30();
+        ConstantKind? vKind = vIndex > 0 ? (ConstantKind)reader.ReadByte() : null;
 
         return new()
         {

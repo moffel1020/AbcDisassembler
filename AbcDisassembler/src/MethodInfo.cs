@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 
 namespace AbcDisassembler;
 
@@ -11,16 +12,16 @@ public class MethodInfo
     public OptionInfo? Options { get; set; }
     public List<uint>? ParamNames { get; set; } // u30 index into cpool string array
 
-    public static MethodInfo Read(ByteReader reader)
+    internal static MethodInfo Read(BinaryReader reader)
     {
-        int paramCount = (int)reader.ReadU30();
-        uint returnType = reader.ReadU30();
+        int paramCount = (int)reader.ReadAbcUInt30();
+        uint returnType = reader.ReadAbcUInt30();
         List<uint> paramTypes = new(paramCount);
         for (int i = 0; i < paramCount; i++)
-            paramTypes.Add(reader.ReadU30());
+            paramTypes.Add(reader.ReadAbcUInt30());
 
-        uint name = reader.ReadU30();
-        MethodFlags flags = (MethodFlags)reader.ReadU8();
+        uint name = reader.ReadAbcUInt30();
+        MethodFlags flags = (MethodFlags)reader.ReadByte();
 
         OptionInfo? options = null;
         if (flags.HasFlag(MethodFlags.HasOptional))
@@ -31,7 +32,7 @@ public class MethodInfo
         {
             paramNames = new(paramTypes.Count);
             for (int i = 0; i < paramTypes.Count; i++)
-                paramNames.Add(reader.ReadU30());
+                paramNames.Add(reader.ReadAbcUInt30());
         }
 
         return new()

@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace AbcDisassembler;
 
 public class ExceptionInfo
@@ -8,12 +10,12 @@ public class ExceptionInfo
     public required uint ExceptionType { get; set; } // u30 index into string array of cpool
     public required uint VarName { get; set; } // u30 index into string array of cpool
 
-    public static ExceptionInfo Read(ByteReader reader) => new()
+    internal static ExceptionInfo Read(BinaryReader reader) => new()
     {
-        From = reader.ReadU30(),
-        To = reader.ReadU30(),
-        Target = reader.ReadU30(),
-        ExceptionType = reader.ReadU30(),
-        VarName = reader.ReadU30()
+        From = reader.ReadAbcUInt30(),
+        To = reader.ReadAbcUInt30(),
+        Target = reader.ReadAbcUInt30(),
+        ExceptionType = reader.ReadAbcUInt30(),
+        VarName = reader.ReadAbcUInt30()
     };
 }

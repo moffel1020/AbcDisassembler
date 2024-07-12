@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace AbcDisassembler;
 
@@ -17,29 +18,29 @@ public class MethodBodyInfo
     public required List<ExceptionInfo> Exceptions { get; set; }
     public required List<TraitInfo> Traits { get; set; }
 
-    internal static MethodBodyInfo Read(ByteReader reader, CPoolInfo cPool)
+    internal static MethodBodyInfo Read(BinaryReader reader, CPoolInfo cPool)
     {
-        uint method = reader.ReadU30();
-        uint maxStack = reader.ReadU30();
-        uint localCount = reader.ReadU30();
-        uint initScopeDepth = reader.ReadU30();
-        uint maxScopeDepth = reader.ReadU30();
+        uint method = reader.ReadAbcUInt30();
+        uint maxStack = reader.ReadAbcUInt30();
+        uint localCount = reader.ReadAbcUInt30();
+        uint initScopeDepth = reader.ReadAbcUInt30();
+        uint maxScopeDepth = reader.ReadAbcUInt30();
 
-        uint codeLength = reader.ReadU30();
-        int endPos = (int)(reader.Position + codeLength);
+        uint codeLength = reader.ReadAbcUInt30();
+        int endPos = (int)(reader.BaseStream.Position + codeLength);
         List<Instruction> code = [];
-        while (reader.Position < endPos)
+        while (reader.BaseStream.Position < endPos)
             code.Add(Instruction.Read(reader, cPool));
 
-        if (reader.Position > endPos)
-            throw new IndexOutOfRangeException("ByteReader read past end position while reading instructions");
+        if (reader.BaseStream.Position > endPos)
+            throw new IndexOutOfRangeException("BinaryReader read past end position while reading instructions");
 
-        int exceptionCount = (int)reader.ReadU30();
+        int exceptionCount = (int)reader.ReadAbcUInt30();
         List<ExceptionInfo> exceptions = new(exceptionCount);
         for (int i = 0; i < exceptionCount; i++)
             exceptions.Add(ExceptionInfo.Read(reader));
 
-        int traitCount = (int)reader.ReadU30();
+        int traitCount = (int)reader.ReadAbcUInt30();
         List<TraitInfo> traits = new(traitCount);
         for (int i = 0; i < traitCount; i++)
             traits.Add(TraitInfo.Read(reader));

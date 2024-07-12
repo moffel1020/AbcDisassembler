@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 
 namespace AbcDisassembler;
 
@@ -49,14 +50,14 @@ public class TypeName() : INamedMultiname
     public required List<uint> Params { get; set; }
     public MultinameKind Kind => MultinameKind.TypeName;
 
-    internal static TypeName Read(ByteReader reader)
+    internal static TypeName Read(BinaryReader reader)
     {
-        uint name = reader.ReadU30();
+        uint name = reader.ReadAbcUInt30();
 
-        uint length = reader.ReadU30();
+        uint length = reader.ReadAbcUInt30();
         List<uint> parameters = new((int)length);
         for (int i = 0; i < length; i++)
-            parameters.Add(reader.ReadU30());
+            parameters.Add(reader.ReadAbcUInt30());
 
         return new()
         {
