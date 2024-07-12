@@ -5,7 +5,7 @@ namespace AbcDisassembler;
 public class NamespaceInfo
 {
     public required NamespaceKind Kind { get; set; }
-    public required uint Name { get; set; } // u30 -> index into constant pool string
+    public required uint Name { get; set; } // u30 index into constant pool string
 
     internal static NamespaceInfo Read(BinaryReader reader) => new()
     {
