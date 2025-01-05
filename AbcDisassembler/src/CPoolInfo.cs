@@ -10,12 +10,14 @@ public class CPoolInfo
     public required List<int> Ints { get; set; }
     public required List<uint> Uints { get; set; }
     public required List<double> Doubles { get; set; }
+    public required List<decimal>? Decimals { get; set; }  // not null when AbcVersion.SupportsDecimal is true
+    public required List<float>? Floats { get; set; } // not null when AbcVersion.SupportsFloat is true
     public required List<string> Strings { get; set; }
     public required List<NamespaceInfo> Namespaces { get; set; }
     public required List<NamespaceSetInfo> NamespaceSets { get; set; }
     public required List<IBaseMultiname> Multinames { get; set; }
 
-    internal static CPoolInfo Read(BinaryReader reader)
+    internal static CPoolInfo Read(BinaryReader reader, AbcVersion version)
     {
         int intCount = (int)reader.ReadAbcUInt30();
         List<int> ints = new(intCount) { 0 };
@@ -31,6 +33,25 @@ public class CPoolInfo
         List<double> doubles = new(doubleCount) { double.NaN };
         for (int i = 0; i < doubleCount - 1; i++)
             doubles.Add(reader.ReadDouble());
+
+
+        List<decimal>? decimals = null;
+        if (version.SupportsDecimal)
+        {
+            int decimalCount = (int)reader.ReadAbcUInt30();
+            decimals = new(decimalCount) { decimal.Zero };
+            for (int i = 0; i < decimalCount; i++)
+                decimals.Add(reader.ReadDecimal());
+        }
+
+        List<float>? floats = null;
+        if (version.SupportsFloat)
+        {
+            int decimalCount = (int)reader.ReadAbcUInt30();
+            floats = new(decimalCount) { float.NaN };
+            for (int i = 0; i < decimalCount; i++)
+                floats.Add(reader.ReadSingle());
+        }
 
         int stringCount = (int)reader.ReadAbcUInt30();
         List<string> strings = new(stringCount) { "" };
@@ -57,6 +78,8 @@ public class CPoolInfo
             Ints = ints,
             Uints = uints,
             Doubles = doubles,
+            Decimals = decimals,
+            Floats = floats,
             Strings = strings,
             Namespaces = namespaces,
             NamespaceSets = namespaceSets,

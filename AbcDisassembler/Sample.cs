@@ -19,6 +19,8 @@ internal class Sample
         {
             if (tag is DoABCDefineTag doAbc)
                 return AbcFile.Read(new MemoryStream(doAbc.ABCData));
+            if (tag is DoABCTag doAbc2)
+                return AbcFile.Read(new MemoryStream(doAbc2.ABCData));
         }
 
         return null;

@@ -5,9 +5,7 @@ namespace AbcDisassembler;
 
 public class AbcFile()
 {
-    public ushort MinorVersion { get; set; }
-    public ushort MajorVersion { get; set; }
-
+    public required AbcVersion Version { get; set; }
     public required CPoolInfo ConstantPool { get; set; }
     public required List<MethodInfo> Methods { get; set; }
     public required List<MetadataInfo> Metadata { get; set; }
@@ -20,10 +18,9 @@ public class AbcFile()
     {
         BinaryReader reader = new(stream);
 
-        ushort minorVersion = reader.ReadUInt16();
-        ushort majorVersion = reader.ReadUInt16();
+        AbcVersion version = AbcVersion.Read(reader);
 
-        CPoolInfo cpool = CPoolInfo.Read(reader);
+        CPoolInfo cpool = CPoolInfo.Read(reader, version);
 
         int methodCount = (int)reader.ReadAbcUInt30();
         List<MethodInfo> methods = new(methodCount);
@@ -56,8 +53,7 @@ public class AbcFile()
 
         return new()
         {
-            MinorVersion = minorVersion,
-            MajorVersion = majorVersion,
+            Version = version,
             ConstantPool = cpool,
             Methods = methods,
             Metadata = metadata,
