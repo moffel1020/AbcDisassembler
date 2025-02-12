@@ -3,7 +3,7 @@ using System.IO;
 
 namespace AbcDisassembler;
 
-public class AbcFile()
+public class AbcFile
 {
     public required AbcVersion Version { get; set; }
     public required CPoolInfo ConstantPool { get; set; }

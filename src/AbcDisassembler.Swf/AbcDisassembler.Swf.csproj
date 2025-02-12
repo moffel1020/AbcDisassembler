@@ -1,7 +1,7 @@
- <Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>exe</OutputType>
+    <OutputType>Library</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>Nullable</WarningsAsErrors>
@@ -10,11 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AbcDisassembler\AbcDisassembler.csproj" />
-    <ProjectReference Include="..\AbcDisassembler.Swf\AbcDisassembler.Swf.csproj" />
   </ItemGroup>
-
-  <!-- <ItemGroup>
-    <PackageReference Include="SwfLib" Version="1.0.5" />
-  </ItemGroup> -->
 
 </Project>

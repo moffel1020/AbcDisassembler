@@ -1,4 +1,4 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -6,7 +6,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbcDisassembler", "src\AbcDisassembler\AbcDisassembler.csproj", "{1AD5F6EC-F3EC-5394-FE2B-D3F0AEEC8510}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbcDisassembler.Sample", "src\AbcDisassembler.Sample\AbcDisassembler.Sample.csproj", "{C9761A8C-52A2-4BD6-9E6E-22A67854B7D1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbcDisassembler.Sample", "src\AbcDisassembler.Sample\AbcDisassembler.Sample.csproj", "{7330BB24-6B3D-83E4-6D57-70FB848B2909}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbcDisassembler.Swf", "src\AbcDisassembler.Swf\AbcDisassembler.Swf.csproj", "{687C518A-6430-D5CC-0876-634C5CF5E69B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,19 +20,24 @@ Global
 		{1AD5F6EC-F3EC-5394-FE2B-D3F0AEEC8510}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AD5F6EC-F3EC-5394-FE2B-D3F0AEEC8510}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AD5F6EC-F3EC-5394-FE2B-D3F0AEEC8510}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C9761A8C-52A2-4BD6-9E6E-22A67854B7D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C9761A8C-52A2-4BD6-9E6E-22A67854B7D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C9761A8C-52A2-4BD6-9E6E-22A67854B7D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C9761A8C-52A2-4BD6-9E6E-22A67854B7D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7330BB24-6B3D-83E4-6D57-70FB848B2909}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7330BB24-6B3D-83E4-6D57-70FB848B2909}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7330BB24-6B3D-83E4-6D57-70FB848B2909}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7330BB24-6B3D-83E4-6D57-70FB848B2909}.Release|Any CPU.Build.0 = Release|Any CPU
+		{687C518A-6430-D5CC-0876-634C5CF5E69B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{687C518A-6430-D5CC-0876-634C5CF5E69B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{687C518A-6430-D5CC-0876-634C5CF5E69B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{687C518A-6430-D5CC-0876-634C5CF5E69B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1AD5F6EC-F3EC-5394-FE2B-D3F0AEEC8510} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
-		{C9761A8C-52A2-4BD6-9E6E-22A67854B7D1} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{7330BB24-6B3D-83E4-6D57-70FB848B2909} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{687C518A-6430-D5CC-0876-634C5CF5E69B} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {2325018E-F990-4475-9BCD-0745860EE3C6}
+		SolutionGuid = {21D7BB2D-1FDF-4910-AED6-302BB810A2D3}
 	EndGlobalSection
 EndGlobal

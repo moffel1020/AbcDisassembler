@@ -1,9 +1,8 @@
 using System;
 using System.IO;
-using SwfLib;
-using SwfLib.Tags;
-using SwfLib.Tags.ActionsTags;
 using AbcDisassembler.Multinames;
+using AbcDisassembler.Swf;
+using AbcDisassembler.Swf.Tags;
 
 namespace AbcDisassembler.Sample;
 
@@ -14,13 +13,13 @@ public class Program
         SwfFile swf;
         using (FileStream file = new(path, FileMode.Open, FileAccess.Read))
         {
-            swf = SwfFile.ReadFrom(file);
+            swf = SwfFile.Read(file);
         }
 
-        foreach (SwfTagBase tag in swf.Tags)
+        foreach (ITag tag in swf.Tags)
         {
-            if (tag is DoABCDefineTag doAbc)
-                return AbcFile.Read(new MemoryStream(doAbc.ABCData));
+            if (tag is DoAbcTag doAbc)
+                return doAbc.AbcFile;
         }
 
         return null;
