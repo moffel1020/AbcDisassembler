@@ -1,4 +1,4 @@
-namespace AbcDisassembler;
+namespace AbcDisassembler.Instructions;
 
 public enum ArgType
 {

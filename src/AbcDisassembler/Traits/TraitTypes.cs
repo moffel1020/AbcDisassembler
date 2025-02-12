@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace AbcDisassembler;
+namespace AbcDisassembler.Traits;
 
 public abstract class BaseTrait { }
 

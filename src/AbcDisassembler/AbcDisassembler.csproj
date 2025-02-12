@@ -4,14 +4,8 @@
     <OutputType>Library</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
     <InvariantGlobalization>true</InvariantGlobalization>
-    <DefaultItemExcludes>$(DefaultItemExcludes);Sample.cs</DefaultItemExcludes>
   </PropertyGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="SwfLib" Version="1.0.5">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
 
 </Project>

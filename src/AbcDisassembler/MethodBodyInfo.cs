@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using AbcDisassembler.Instructions;
+using AbcDisassembler.Traits;
 
 namespace AbcDisassembler;
 

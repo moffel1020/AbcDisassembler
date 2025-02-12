@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace AbcDisassembler;
+namespace AbcDisassembler.Multinames;
 
 public interface IMultiname
 {

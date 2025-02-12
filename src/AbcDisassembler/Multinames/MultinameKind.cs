@@ -1,4 +1,4 @@
-namespace AbcDisassembler;
+namespace AbcDisassembler.Multinames;
 
 public enum MultinameKind
 {

@@ -1,0 +1,19 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AbcDisassembler\AbcDisassembler.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SwfLib" Version="1.0.5" />
+  </ItemGroup>
+
+</Project>

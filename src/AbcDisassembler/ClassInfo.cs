@@ -1,16 +1,18 @@
 using System.Collections.Generic;
 using System.IO;
+using AbcDisassembler.Traits;
 
 namespace AbcDisassembler;
 
-public class ScriptInfo
+public class ClassInfo
 {
-    public required uint Init { get; set; } // u30 index into method array of abcfile
+    public required uint Init { get; set; } // u30 index into method array of abcfile, static initializer
     public required List<TraitInfo> Traits { get; set; }
 
-    internal static ScriptInfo Read(BinaryReader reader)
+    internal static ClassInfo Read(BinaryReader reader)
     {
         uint init = reader.ReadAbcUInt30();
+
         int traitCount = (int)reader.ReadAbcUInt30();
         List<TraitInfo> traits = new(traitCount);
         for (int i = 0; i < traitCount; i++)

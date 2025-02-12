@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace AbcDisassembler;
+namespace AbcDisassembler.Traits;
 
 public class TraitInfo
 {

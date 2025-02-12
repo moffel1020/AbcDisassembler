@@ -1,4 +1,4 @@
-namespace AbcDisassembler;
+namespace AbcDisassembler.Traits;
 
 public enum TraitType
 {
