@@ -65,7 +65,7 @@ public class Instruction
         0x1F => ("hasnext", []),
         0x20 => ("pushnull", []),
         0x21 => ("pushundefined", []),
-        // 0x22 => ("pushuninitialized", [ArgType.Unknown]),
+        0x22 => ("pushfloat", [ArgType.Float]), // need float support
         0x23 => ("nextvalue", []),
         0x24 => ("pushbyte", [ArgType.ByteLiteral]),
         0x25 => ("pushshort", [ArgType.IntLiteral]),
@@ -82,7 +82,7 @@ public class Instruction
         0x30 => ("pushscope", []),
         0x31 => ("pushnamespace", [ArgType.Namespace]),
         0x32 => ("hasnext2", [ArgType.UintLiteral, ArgType.UintLiteral]),
-        // 0x33 => ("pushdecimal", [ArgType.Unknown]),
+        0x33 => ("pushdecimal", [ArgType.Decimal]),
         // 0x34 => ("pushdnan", [ArgType.Unknown]),
         0x35 => ("li8", []),
         0x36 => ("li16", []),

@@ -15,7 +15,7 @@ public class CPoolInfo
     public required List<string> Strings { get; set; }
     public required List<NamespaceInfo> Namespaces { get; set; }
     public required List<NamespaceSetInfo> NamespaceSets { get; set; }
-    public required List<IBaseMultiname> Multinames { get; set; }
+    public required List<IMultiname> Multinames { get; set; }
 
     internal static CPoolInfo Read(BinaryReader reader, AbcVersion version)
     {
@@ -69,7 +69,7 @@ public class CPoolInfo
             namespaceSets.Add(NamespaceSetInfo.Read(reader));
 
         int multinameCount = (int)reader.ReadAbcUInt30();
-        List<IBaseMultiname> multinames = new(multinameCount) { new QName(0, 0) };
+        List<IMultiname> multinames = new(multinameCount) { new QName(0, 0) };
         for (int i = 0; i < multinameCount - 1; i++)
             multinames.Add(ReadMultiname(reader));
 
@@ -94,10 +94,10 @@ public class CPoolInfo
         return Encoding.UTF8.GetString(bytes, 0, (int)length);
     }
 
-    private static IBaseMultiname ReadMultiname(BinaryReader reader)
+    private static IMultiname ReadMultiname(BinaryReader reader)
     {
         MultinameKind kind = (MultinameKind)reader.ReadByte();
-        IBaseMultiname mn = kind switch
+        IMultiname mn = kind switch
         {
             MultinameKind.QName or MultinameKind.QNameA => new QName(reader.ReadAbcUInt30(), reader.ReadAbcUInt30()),
             MultinameKind.RTQName or MultinameKind.RTQNameA => new RTQName(reader.ReadAbcUInt30()),

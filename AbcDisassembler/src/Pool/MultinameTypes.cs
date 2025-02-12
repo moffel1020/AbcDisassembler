@@ -3,12 +3,12 @@ using System.IO;
 
 namespace AbcDisassembler;
 
-public interface IBaseMultiname
+public interface IMultiname
 {
     public MultinameKind Kind { get; }
 }
 
-public interface INamedMultiname : IBaseMultiname
+public interface INamedMultiname : IMultiname
 {
     public uint Name { get; set; }
 }
@@ -26,7 +26,7 @@ public class RTQName(uint name) : INamedMultiname
     public MultinameKind Kind => MultinameKind.RTQName;
 }
 
-public class RTQNameL : IBaseMultiname
+public class RTQNameL : IMultiname
 {
     public MultinameKind Kind => MultinameKind.RTQNameL;
 }
@@ -38,7 +38,7 @@ public class Multiname(uint name, uint nsSet) : INamedMultiname
     public MultinameKind Kind => MultinameKind.Multiname;
 }
 
-public class MultinameL(uint nsSet) : IBaseMultiname
+public class MultinameL(uint nsSet) : IMultiname
 {
     public uint NamespaceSet { get; set; } = nsSet; // u30 index into namespace_sets
     public MultinameKind Kind => MultinameKind.MultinameL;

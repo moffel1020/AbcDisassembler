@@ -10,6 +10,8 @@ public enum ArgType
     Int,
     Uint,
     Double,
+    Float,
+    Decimal,
     String,
     Namespace,
     Multiname,
