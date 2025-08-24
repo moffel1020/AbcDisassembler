@@ -16,6 +16,42 @@ public class SwfFile
 
     public static SwfFile Read(Stream stream)
     {
+        (SwfHeader header, BinaryReader reader) = ReadHeader(stream);
+
+        List<ITag> tags = [];
+        tags.Add(ITag.Read(reader));
+        if (tags[0].Type != TagType.FileAttributes)
+            throw new Exception($"First tag should be FileAttributes. Found {tags[0].Type}");
+
+        while (tags[^1].Type != TagType.End)
+            tags.Add(ITag.Read(reader));
+        
+        return new()
+        {
+            Header = header,
+            Tags = tags,
+        };
+    }
+
+    public static IEnumerable<ITag> ReadTags(Stream stream)
+    {
+        (_, BinaryReader reader) = ReadHeader(stream);
+
+        ITag tag = ITag.Read(reader);
+        if (tag.Type != TagType.FileAttributes)
+            throw new Exception($"First tag should be FileAttributes. Found {tag.Type}");
+
+        yield return tag;
+
+        while (tag.Type != TagType.End)
+        {
+            tag = ITag.Read(reader);
+            yield return tag;
+        }
+    }
+
+    private static (SwfHeader, BinaryReader) ReadHeader(Stream stream)
+    {
         CompressionType compression = (CompressionType)stream.ReadByte();
         Span<byte> buf = [(byte)stream.ReadByte(), (byte)stream.ReadByte()];
         if (buf[0] != 'W' || buf[1] != 'S')
@@ -48,19 +84,7 @@ public class SwfFile
             FrameCount = frameCount
         };
 
-        List<ITag> tags = [];
-        tags.Add(ITag.Read(reader));
-        if (tags[0].Type != TagType.FileAttributes)
-            throw new Exception($"First tag should be FileAttributes. Found {tags[0].Type}");
-
-        while (tags[^1].Type != TagType.End)
-            tags.Add(ITag.Read(reader));
-        
-        return new()
-        {
-            Header = header,
-            Tags = tags,
-        };
+        return (header, reader);
     }
 
     private static byte[] DecompressZlib(Stream input)
