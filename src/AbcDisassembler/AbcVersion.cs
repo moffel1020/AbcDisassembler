@@ -2,7 +2,7 @@ using System.IO;
 
 namespace AbcDisassembler;
 
-public struct AbcVersion
+public record struct AbcVersion
 {
     public required ushort Minor { get; set; }
     public required ushort Major { get; set; }

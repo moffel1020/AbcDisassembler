@@ -1,8 +1,8 @@
 namespace AbcDisassembler.Swf;
 
-public enum CompressionType : byte
+public enum CompressionType
 {
-    None = (byte)'F',
-    Zlib = (byte)'C',
-    Lzma = (byte)'Z',
+    None = 'F',
+    Zlib = 'C',
+    Lzma = 'Z',
 }

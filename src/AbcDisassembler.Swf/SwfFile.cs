@@ -6,7 +6,9 @@ using AbcDisassembler.Swf.Tags;
 
 namespace AbcDisassembler.Swf;
 
-// This swf implementation is only intended for reading/writing ABC related tags
+/// <summary>
+/// This SWF implementation is only intended for reading/writing ABC related tags.
+/// </summary>
 public class SwfFile
 {
     public required SwfHeader Header { get; set; }

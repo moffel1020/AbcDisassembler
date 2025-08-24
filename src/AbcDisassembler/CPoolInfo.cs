@@ -35,22 +35,24 @@ public class CPoolInfo
         for (int i = 0; i < doubleCount - 1; i++)
             doubles.Add(reader.ReadDouble());
 
-
         List<decimal>? decimals = null;
         if (version.SupportsDecimal)
         {
             int decimalCount = (int)reader.ReadAbcUInt30();
             decimals = new(decimalCount) { decimal.Zero };
             for (int i = 0; i < decimalCount; i++)
+            {
+                // TODO: this might be incorrect. check if decimals are represented differently in flash
                 decimals.Add(reader.ReadDecimal());
+            }
         }
 
         List<float>? floats = null;
         if (version.SupportsFloat)
         {
-            int decimalCount = (int)reader.ReadAbcUInt30();
-            floats = new(decimalCount) { float.NaN };
-            for (int i = 0; i < decimalCount; i++)
+            int floatCount = (int)reader.ReadAbcUInt30();
+            floats = new(floatCount) { float.NaN };
+            for (int i = 0; i < floatCount; i++)
                 floats.Add(reader.ReadSingle());
         }
 
