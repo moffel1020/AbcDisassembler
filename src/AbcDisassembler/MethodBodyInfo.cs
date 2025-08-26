@@ -29,12 +29,19 @@ public class MethodBodyInfo
         uint maxScopeDepth = reader.ReadAbcUInt30();
 
         uint codeLength = reader.ReadAbcUInt30();
-        int endPos = (int)(reader.BaseStream.Position + codeLength);
-        List<Instruction> code = [];
-        while (reader.BaseStream.Position < endPos)
-            code.Add(Instruction.Read(reader, cPool));
 
-        if (reader.BaseStream.Position > endPos)
+        // Some streams like ZLibStream don't support the Position property so create a MemoryStream
+        // to know how many bytes to read
+        byte[] codeBytes = new byte[codeLength];
+        reader.BaseStream.ReadExactly(codeBytes, 0, (int)codeLength);
+        using MemoryStream codeStream = new(codeBytes);
+        BinaryReader codeReader = new(codeStream);
+
+        List<Instruction> code = [];
+        while (codeStream.Position < codeLength)
+            code.Add(Instruction.Read(codeReader, cPool));
+
+        if (codeStream.Position > codeLength)
             throw new IndexOutOfRangeException("BinaryReader read past end position while reading instructions");
 
         int exceptionCount = (int)reader.ReadAbcUInt30();

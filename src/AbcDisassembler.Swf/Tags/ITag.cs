@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 
 namespace AbcDisassembler.Swf.Tags;
@@ -15,20 +14,19 @@ public interface ITag
         if (length == 0x3F)
             length = reader.ReadUInt32();
 
-        long begin = reader.BaseStream.Position;
+        // ZLibStream doesn't support the Position property for checking the read length
+        // so use a MemoryStream to ensure we don't read beyond the end of tag
+        byte[] tagBytes = new byte[length];
+        reader.BaseStream.ReadExactly(tagBytes, 0, (int)length);
+        using MemoryStream tagStream = new(tagBytes);
+        BinaryReader tagReader = new(tagStream);
 
-        ITag tag = type switch
+        return type switch
         {
-            TagType.DoAbc => DoAbcTag.Read(reader),
-            TagType.DoAbc2 => DoAbc2Tag.Read(reader),
+            TagType.DoAbc => DoAbcTag.Read(tagReader),
+            TagType.DoAbc2 => DoAbc2Tag.Read(tagReader),
             TagType.End => new EndTag(),
-            _ => UnknownTag.Read(reader.BaseStream, type, length),
+            _ => UnknownTag.Read(tagStream, type, length),
         };
-
-        long end = reader.BaseStream.Position;
-        if (end - begin != length)
-            throw new Exception("Read beyond end of tag");
-
-        return tag;
     }
 }

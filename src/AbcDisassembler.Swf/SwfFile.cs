@@ -16,7 +16,8 @@ public class SwfFile
 
     public static SwfFile Read(Stream stream)
     {
-        (SwfHeader header, BinaryReader reader) = ReadHeader(stream);
+        (SwfHeader header, Stream decompressedStream) = ReadHeader(stream);
+        BinaryReader reader = new(decompressedStream);
 
         List<ITag> tags = [];
         tags.Add(ITag.Read(reader));
@@ -35,7 +36,8 @@ public class SwfFile
 
     public static IEnumerable<ITag> ReadTags(Stream stream)
     {
-        (_, BinaryReader reader) = ReadHeader(stream);
+        (_, Stream decompressedStream) = ReadHeader(stream);
+        BinaryReader reader = new(decompressedStream);
 
         ITag tag = ITag.Read(reader);
         if (tag.Type != TagType.FileAttributes)
@@ -50,7 +52,7 @@ public class SwfFile
         }
     }
 
-    private static (SwfHeader, BinaryReader) ReadHeader(Stream stream)
+    private static (SwfHeader, Stream) ReadHeader(Stream stream)
     {
         CompressionType compression = (CompressionType)stream.ReadByte();
         Span<byte> buf = [(byte)stream.ReadByte(), (byte)stream.ReadByte()];
@@ -66,9 +68,7 @@ public class SwfFile
         if (compression != CompressionType.Zlib)
             throw new Exception("Only zlib compression is currently supported");
 
-        byte[] decompressed = DecompressZlib(stream);
-
-        MemoryStream decompressedStream = new(decompressed);
+        ZLibStream decompressedStream = new(stream, CompressionMode.Decompress);
         reader = new(decompressedStream);
 
         byte[] rectBytes = ReadRectBytes(reader.BaseStream);
@@ -84,7 +84,7 @@ public class SwfFile
             FrameCount = frameCount
         };
 
-        return (header, reader);
+        return (header, decompressedStream);
     }
 
     private static byte[] DecompressZlib(Stream input)
