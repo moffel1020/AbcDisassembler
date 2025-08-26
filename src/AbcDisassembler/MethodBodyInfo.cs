@@ -35,7 +35,7 @@ public class MethodBodyInfo
         byte[] codeBytes = new byte[codeLength];
         reader.BaseStream.ReadExactly(codeBytes, 0, (int)codeLength);
         using MemoryStream codeStream = new(codeBytes);
-        BinaryReader codeReader = new(codeStream);
+        using BinaryReader codeReader = new(codeStream);
 
         List<Instruction> code = [];
         while (codeStream.Position < codeLength)

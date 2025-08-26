@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace AbcDisassembler;
 
@@ -16,7 +17,7 @@ public class AbcFile
 
     public static AbcFile Read(Stream stream)
     {
-        BinaryReader reader = new(stream);
+        using BinaryReader reader = new(stream, Encoding.Default, leaveOpen: true);
 
         AbcVersion version = AbcVersion.Read(reader);
 

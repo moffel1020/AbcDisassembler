@@ -19,7 +19,7 @@ public interface ITag
         byte[] tagBytes = new byte[length];
         reader.BaseStream.ReadExactly(tagBytes, 0, (int)length);
         using MemoryStream tagStream = new(tagBytes);
-        BinaryReader tagReader = new(tagStream);
+        using BinaryReader tagReader = new(tagStream);
 
         return type switch
         {

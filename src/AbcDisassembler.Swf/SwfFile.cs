@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Text;
 using AbcDisassembler.Swf.Tags;
 
 namespace AbcDisassembler.Swf;
@@ -17,7 +18,7 @@ public class SwfFile
     public static SwfFile Read(Stream stream)
     {
         (SwfHeader header, Stream decompressedStream) = ReadHeader(stream);
-        BinaryReader reader = new(decompressedStream);
+        using BinaryReader reader = new(decompressedStream);
 
         List<ITag> tags = [];
         tags.Add(ITag.Read(reader));
@@ -37,7 +38,7 @@ public class SwfFile
     public static IEnumerable<ITag> ReadTags(Stream stream)
     {
         (_, Stream decompressedStream) = ReadHeader(stream);
-        BinaryReader reader = new(decompressedStream);
+        using BinaryReader reader = new(decompressedStream);
 
         ITag tag = ITag.Read(reader);
         if (tag.Type != TagType.FileAttributes)
@@ -59,8 +60,7 @@ public class SwfFile
         if (buf[0] != 'W' || buf[1] != 'S')
             throw new Exception("Invalid compression header");
 
-        BinaryReader reader = new(stream);
-
+        using BinaryReader reader = new(stream, Encoding.Default, leaveOpen: true);
         byte version = reader.ReadByte();
         uint fileLength = reader.ReadUInt32();
 
@@ -69,11 +69,11 @@ public class SwfFile
             throw new Exception("Only zlib compression is currently supported");
 
         ZLibStream decompressedStream = new(stream, CompressionMode.Decompress);
-        reader = new(decompressedStream);
+        using BinaryReader decompressedReader = new(decompressedStream, Encoding.Default, leaveOpen: true);
 
-        byte[] rectBytes = ReadRectBytes(reader.BaseStream);
-        ushort frameRate = reader.ReadUInt16();
-        ushort frameCount = reader.ReadUInt16();
+        byte[] rectBytes = ReadRectBytes(decompressedStream);
+        ushort frameRate = decompressedReader.ReadUInt16();
+        ushort frameCount = decompressedReader.ReadUInt16();
 
         SwfHeader header = new()
         {
